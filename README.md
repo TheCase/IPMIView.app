@@ -6,4 +6,4 @@ Download the latest IPMIView software from SuperMicro:
 
 Uncompress the archive and copy the contents to 
 
-``IPMIView.app/Resource/IPMIView``
+``IPMIView.app/Resources/IPMIView``
