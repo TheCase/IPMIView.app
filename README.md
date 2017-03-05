@@ -7,3 +7,5 @@ Download the latest IPMIView software from SuperMicro:
 Uncompress the archive and copy the contents to 
 
 ``IPMIView.app/Resources/IPMIView``
+
+Move the app bundle to the /Applications folder
