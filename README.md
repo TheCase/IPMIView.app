@@ -4,8 +4,11 @@ Download the latest IPMIView software from SuperMicro:
 
 [ftp://ftp.supermicro.com/utility/IPMIView/Linux/]()
 
-Uncompress the archive and copy the contents to 
-
-``IPMIView.app/Resources/IPMIView``
-
-Move the app bundle to the /Applications folder
+```
+git clone https://github.com/TheCase/IPMIView.app
+cd IPMIView.app
+mkdir -p Resources/IPMIView
+tar -zxvf ~/Downloads/IPMIView*.tar.gz --strip=1 -C ./Resources/IPMIView/.
+cd ..
+cp -R IPMIView.app ~/Applications
+```
