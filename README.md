@@ -12,3 +12,4 @@ tar -zxvf ~/Downloads/IPMIView*.tar.gz --strip=1 -C ./Resources/IPMIView/.
 cd ..
 cp -R IPMIView.app ~/Applications
 ```
+
