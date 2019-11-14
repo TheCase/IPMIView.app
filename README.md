@@ -2,7 +2,7 @@
 
 Download the latest IPMIView software from SuperMicro:
 
-[git@github.com:TheCase/IPMIView.app.git]()
+[https://ftp.supermicro.com/wftp/utility/IPMIView/Linux/]()
 
 ```
 git clone https://github.com/TheCase/IPMIView.app
