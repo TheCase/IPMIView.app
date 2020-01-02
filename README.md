@@ -14,18 +14,18 @@ You should now have an application icon in your Applications folder.
 
 #### Using the KVM Console 
 
-You need to add an `Input Monitoring` exception for `java` in the `Security & Privacy` `Privacy` Tab in `System Preferences`:
+You need to add an `Input Monitoring` exception for `java` in the `Security & Privacy` -\> `Privacy` Tab in `System Preferences`:
 
-Open `System Preferences`
-Click on `Security & Privacy`
-Click the `Privacy` button/tab
-Scroll down to `Input Monitoring`
+- Open `System Preferences`
+- Click on `Security & Privacy`
+- Click the `Privacy` button/tab
+- Scroll down to `Input Monitoring`
 (you may need to click the lock in the lower left and enter your password to add a new item)
-Click the plus `+` symbol
-In the top of the new window, select MacintoshHD in the pulldown
+- Click the plus `+` symbol
+- In the top of the new window, select MacintoshHD in the pulldown
 Library -> Java -> JavaVirtualMachines -> jdk\<version\>.jdk -> bin -> Contents -> Home -> bin 
-Double click on `java`
-Make sure the box next to `java` is now checked and close the window
+- Double click on `java`
+- Make sure the box next to `java` is now checked and close the window
 
 When you attempt to launch the console, you will be presented with a message that says the developer is not verified.  DO NOT click "Move to Trash" - this will  delete the files necessary to run the graphical console.  Once you get this message:
 
