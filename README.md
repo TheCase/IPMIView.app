@@ -10,7 +10,7 @@ cd IPMIView.app
 sh script.sh
 ```
 
-You should now have an application icon in your Applications folder.
+You should now have an application icon in your user's ~/Applications folder.
 
 #### Using the KVM Console 
 
