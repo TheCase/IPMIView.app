@@ -1,16 +1,18 @@
 ### IPMIView (java) App wrapper for MacOS**
  
-Download the latest IPMIView software from SuperMicro:
+Download the latest IPMIView software from SuperMicro (to your home directories "Downloads" folder, aka `~/Downloads`:
 
 [https://ftp.supermicro.com/wftp/utility/IPMIView/Linux/](https://ftp.supermicro.com/wftp/utility/IPMIView/Linux/)
 
+Download the code and execute the script to unarchive the linux package and create the Application Bundle:
 ```
+cd ~
 git clone https://github.com/TheCase/IPMIView.app
 cd IPMIView.app
 sh script.sh
 ```
 
-You should now have an application icon in your user's ~/Applications folder.
+You should now have an application icon in your home directory's Applications (aka `~/Applications`) folder.
 
 #### Using the KVM Console 
 
