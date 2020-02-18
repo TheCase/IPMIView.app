@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd ${DIR}/../../Resources/IPMIView
+cd ${DIR}/../Resources/IPMIView
 java -jar IPMIView20.jar
