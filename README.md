@@ -1,3 +1,5 @@
+Archived.  I no longer have systems that require this tool.  If you would like to take over management of this project, let me know and I can transfer ownership.
+
 ### IPMIView (java) App wrapper for MacOS**
 
 Download the latest IPMIView software from SuperMicro (to your home directories "Downloads" folder, aka `~/Downloads`:
