@@ -51,8 +51,8 @@ else
 fi
 
 echo "Extracting contents of downloaded IPMIView archive..."
-if [[ -d Contents/ ]]; then
-  rm -rf Contents/
+if [[ -d Contents/Resources/IPMIView ]]; then
+  rm -rf Contents/Resources/IPMIView
 fi
 mkdir -p Contents/Resources/IPMIView/Contents/Home/bin
 tar -zxf "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* --strip=1 -C ./Contents/Resources/IPMIView/. ||
