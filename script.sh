@@ -19,20 +19,9 @@ if which wget >/dev/null; then
     "${DOWNLOAD_URL}"
   rm "${LOCAL_DOWNLOAD_LOCATION}/"robots.txt*
 
-  # Check MD5
-  EXPECTED_MD5=$(\grep MD5 "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  ACTUAL_MD5=$(md5sum "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  if ! diff <(echo "${EXPECTED_MD5}") <(echo "${ACTUAL_MD5}"); then
-    echo "MD5 is not as expected; download corrupted."
-    echo "Expected: [${EXPECTED_MD5}]"
-    echo "Actual:   [${ACTUAL_MD5}]"
-    echo "Exiting."
-    exit 1
-  fi
-
   # Check SHA-256
-  EXPECTED_SHA256=$(\grep MD5 "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  ACTUAL_SHA256=$(md5sum "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  EXPECTED_SHA256=$(\grep SHA-256 "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  ACTUAL_SHA256=$(shasum -a 256 "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
   if ! diff <(echo "${EXPECTED_SHA256}") <(echo "${ACTUAL_SHA256}"); then
     echo "SHA-256 is not as expected; download corrupted."
     echo "Expected: [${EXPECTED_SHA256}]"
