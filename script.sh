@@ -17,10 +17,10 @@ if which wget >/dev/null; then
     --no-directories \
     --reject index.html,index.html.tmp,robots.txt,robots.txt.tmp \
     "${DOWNLOAD_URL}"
-  rm "${LOCAL_DOWNLOAD_LOCATION}/"robots.txt*
 
   # Check SHA-256
-  EXPECTED_SHA256=$(\grep SHA-256 "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  #
+  EXPECTED_SHA256=$(\grep -A3 "tar.gz" "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | grep SHA-256 | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
   ACTUAL_SHA256=$(shasum -a 256 "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
   if ! diff <(echo "${EXPECTED_SHA256}") <(echo "${ACTUAL_SHA256}"); then
     echo "SHA-256 is not as expected; download corrupted."
