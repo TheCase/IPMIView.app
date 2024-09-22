@@ -1,36 +1,67 @@
 #!/bin/bash
 set -
 
-DOWNLOAD_URL="https://www.supermicro.com/wdl/utility/IPMIView/Linux/"
-LOCAL_DOWNLOAD_LOCATION="./SM_download"
+BASE_URL="https://www.supermicro.com/en/support/resources"
+INFO_URL="${BASE_URL}/downloadcenter/smsdownload\?category\=IPMI"
+API_URL="https://www.supermicro.com/support/resources/getfile.php?SoftwareItemID=DLID&type=serversoftwarefile"
 
-if which wget >/dev/null; then
-  echo "Downloading latest version of IPMIView from [${DOWNLOAD_URL}]..."
-  wget \
-    --timestamping \
-    --recursive \
-    --level=1 \
-    -q \
-    --show-progress \
-    --directory-prefix="${LOCAL_DOWNLOAD_LOCATION}/" \
-    --no-parent \
-    --no-directories \
-    --reject index.html,index.html.tmp,robots.txt,robots.txt.tmp \
-    "${DOWNLOAD_URL}"
+if which curl >/dev/null; then
+  # this area is subject to problems if SuperMicro changes their page format
+  DL_ID=$(curl -s ${INFO_URL} | grep "data-sms-name=\"Linux\".*sms_radio_buttons_IPMIView" | cut -d"'" -f4)
+  DL_URL=$(echo $API_URL | sed "s/DLID/${DL_ID}/")
+  DOWNLOAD_URL=$(curl -s -i ${DL_URL} | grep 'location' | awk -F': ' '{print $2}' | tr -d '[:space:]')
+  CHECKSUM_URL=$(dirname "${DOWNLOAD_URL}")/CheckSum.txt
+  DOWNLOAD_FILENAME=$(basename "${DOWNLOAD_URL}")
+  
+  LOCAL_DOWNLOAD_LOCATION="./SM_download"
+ 
+  # if LOCAL_DOWNLOAD_LOCATION doesn't exist, create it
+  if [ ! -d "${LOCAL_DOWNLOAD_LOCATION}" ]; then
+    mkdir -p ${LOCAL_DOWNLOAD_LOCATION}
+  fi 
 
-  # Check SHA-256
-  EXPECTED_SHA256=$(\grep -A3 "tar.gz" "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | grep SHA-256 | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  ACTUAL_SHA256=$(shasum -a 256 "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  if ! diff <(echo "${EXPECTED_SHA256}") <(echo "${ACTUAL_SHA256}"); then
-    echo "SHA-256 is not as expected; download corrupted."
-    echo "Expected: [${EXPECTED_SHA256}]"
-    echo "Actual:   [${ACTUAL_SHA256}]"
+  echo "Downloading CheckSum.txt [${CHECKSUM_URL}]"
+  if [ -f "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" ]; then
+    read -p "Checksum file exists. Overwrite existing file? [y/N] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo ok, skipping download...
+      echo
+      SKIP=1 
+    fi
+  fi
+  if [ -z $SKIP ]; then
+    curl --progress-bar -o ${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt ${CHECKSUM_URL}
+  fi
+  unset SKIP
+
+  echo "Downloading latest version of IPMIView [${DOWNLOAD_URL}]"
+  if [ -f "${LOCAL_DOWNLOAD_LOCATION}/${DOWNLOAD_FILENAME}" ]; then
+    read -p "Application file exists. Overwrite existing file? [y/N] " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+      echo ok, skipping download...
+      echo
+      SKIP=1 
+    fi
+  fi 
+  if [ -z $SKIP ]; then
+    curl --progress-bar -o ${LOCAL_DOWNLOAD_LOCATION}/${DOWNLOAD_FILENAME} ${DOWNLOAD_URL}
+  fi
+
+  # Check MD5
+  EXPECTED_CHECKSUM=$(\grep -A3 "tar.gz" "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | grep MD5 | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  ACTUAL_CHECKSUM=$(md5sum "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  if ! diff <(echo "${EXPECTED_CHECKSUM}") <(echo "${ACTUAL_CHECKSUM}"); then
+    echo "Checksum is not as expected; download may be corrupted."
+    echo "Expected: [${EXPECTED_CHECKSUM}]"
+    echo "Actual:   [${ACTUAL_CHECKSUM}]"
     echo "Exiting."
     exit 1
   fi
 
 else
-  echo "WARNING: 'wget' CLI not found."
+  echo "WARNING: 'curl' command not found."
   echo
   echo "Please visit ${DOWNLOAD_URL} to download the latest version of IPMIView and copy the archive into $(pwd)/${LOCAL_DOWNLOAD_LOCATION}/"
   echo
