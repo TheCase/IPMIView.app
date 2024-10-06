@@ -12,7 +12,13 @@ if which curl >/dev/null; then
   DOWNLOAD_URL=$(curl -s -i ${DL_URL} | grep 'location' | awk -F': ' '{print $2}' | tr -d '[:space:]')
   CHECKSUM_URL=$(dirname "${DOWNLOAD_URL}")/CheckSum.txt
   DOWNLOAD_FILENAME=$(basename "${DOWNLOAD_URL}")
-  
+  if [ -z ${DOWNLOAD_FILENAME} ]; then
+    echo "[WARNING!] Problem parsing latest version..."
+    echo "Falling back to last known version."
+    echo "Please file an issue at https://github.com/TheCase/IPMIView.app/issues regarding latest version discovery."
+    DOWNLOAD_FILENAME="IPMIView_2.21.1_build.230720_bundleJRE_Linux_x64.tar.gz"
+  fi
+
   LOCAL_DOWNLOAD_LOCATION="./SM_download"
  
   # if LOCAL_DOWNLOAD_LOCATION doesn't exist, create it
