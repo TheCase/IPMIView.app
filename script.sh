@@ -55,6 +55,9 @@ if which curl >/dev/null; then
     fi
   fi 
   if [ -z $SKIP ]; then
+    echo "Clearing older downloads... "
+    rm -fv ${LOCAL_DOWNLOAD_LOCATION}/IPMI*
+    echo "Downloading ${DOWNLOAD_FILENAME}..."
     curl --progress-bar -o ${LOCAL_DOWNLOAD_LOCATION}/${DOWNLOAD_FILENAME} ${DOWNLOAD_URL}
   fi
 
