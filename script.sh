@@ -1,5 +1,8 @@
 #!/bin/bash
 set -
+if [ "" = "${JAVA_HOME}" ] ; then
+  JAVA_HOME=/usr
+fi
 
 BASE_URL="https://www.supermicro.com/en/support/resources"
 INFO_URL="${BASE_URL}/downloadcenter/smsdownload\?category\=IPMI"
@@ -84,7 +87,7 @@ tar -zxf "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* --strip=1 -C ./Contents/Res
   { echo "Something went wrong, check download of IPMIView archive" && exit 1; }
 
 echo "Linking 'java' and 'jre'..."
-ln -s /usr/bin/java Contents/Resources/IPMIView/Contents/Home/bin/java
+ln -s "${JAVA_HOME}/bin/java" Contents/Resources/IPMIView/Contents/Home/bin/java
 rm -rf Contents/Resources/IPMIView/jre/*
 pushd Contents/Resources/IPMIView/jre/ >/dev/null &&
   ln -s ../Contents . &&
