@@ -60,7 +60,7 @@ if which curl >/dev/null; then
 
   # Check MD5
   EXPECTED_CHECKSUM=$(\grep -A3 "tar.gz" "${LOCAL_DOWNLOAD_LOCATION}/CheckSum.txt" | grep MD5 | cut -d':' -f2 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
-  ACTUAL_CHECKSUM=$(md5sum "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
+  ACTUAL_CHECKSUM=$(md5sum "${LOCAL_DOWNLOAD_LOCATION}"/${DOWNLOAD_FILENAME} | cut -d' ' -f1 | tr -d "[:space:]" | tr '[:upper:]' '[:lower:]')
   if ! diff <(echo "${EXPECTED_CHECKSUM}") <(echo "${ACTUAL_CHECKSUM}"); then
     echo "Checksum is not as expected; download may be corrupted."
     echo "Expected: [${EXPECTED_CHECKSUM}]"
