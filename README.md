@@ -59,7 +59,7 @@ java -jar IPMIView20.jar
 
 If you have issues with IMPIView loading correctly with this method, please contact SuperMicro support. The problem is related to the app and your computer setup, not the wrapper.
 
-### KVM Color Issues on X9 Boards
+## KVM Color Issues on X9 Boards
 The KVM console may display incorrect colors on older X9 series boards. This is a known issue with newer versions of IPMIView [1,2,3] and looks something like this:
 
 <img width="30%" alt="Screenshot 2024-10-18 at 14 24 21" src="https://github.com/user-attachments/assets/58c6b4a3-a71b-40d4-b561-027e2c6ec33d">
@@ -69,7 +69,7 @@ The KVM console may display incorrect colors on older X9 series boards. This is 
 Perform the following steps *after IPMIView has been installed in the Applications folder*:
 1. Download `https://<BMC_IP>/libmac_x86_64__V1.0.5.jar.pack.gz` where `<BMC_IP>` should be replaced with the specific IP of your server's BMC. The exact version may depend on your BMC firmware version (e.g. V1.0.5 was found on IPMI firmware 3.36). 
 2. Unpack the downloaded file with `unpack200`, e.g. `unpack200 libmac_x86_64__V1.0.5.jar.pack.gz libmac.jar`
-3. Extract the files using `jar xf  libmac.jar` which will create 
+3. Extract the files using `jar xf libmac.jar` which will create 
 `libiKVM64.jnilib`, `libSharedLibrary64.jnilib`, and a folder called `META-INF`. The folder can be safely disregarded.
 4. Move both `jnilib` files to `Contents/Resources/IPMIView` within `IPMIView.app`, overwriting existing files. Right-click the app, and click "Show Contents" to navigate to the inner directories. This should be done to the app in `~/Applications` after already running `script.sh`.
 5. Re-launch IPMIView, open the KVM Console, and the colors should be fixed.
