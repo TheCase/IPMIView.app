@@ -86,6 +86,14 @@ if [ "$arch" = "x86_64" ] ; then
 elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
   echo "Using aarm64 platform. Checking Java version..."
 
+  if [ -x "$JAVA_HOME/bin/javac" ] ; then
+    if [ ! -f PropertyPrint.class ] ; then
+      "$JAVA_HOME/bin/javac" -target 1.8 PropertyPrint.java
+    fi
+  else
+    #echo "Cannot determine Java architecture because you do not have a JDK installed."
+  fi
+
   jarch=$( $JAVA_HOME/bin/java -classpath . PropertyPrint os.arch )
 
   if [ "x86_64" != "$jarch" ] ; then
