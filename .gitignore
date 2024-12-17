@@ -1,2 +1,4 @@
-Contents/Resources/IPMIView
-SM_download/
+*~
+.*.sw*
+/SM_download/
+/IPMIView.app/
