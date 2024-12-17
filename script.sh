@@ -91,7 +91,9 @@ elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
       "$JAVA_HOME/bin/javac" -target 1.8 PropertyPrint.java
     fi
   else
-    #echo "Cannot determine Java architecture because you do not have a JDK installed."
+    echo "Cannot determine Java architecture because you do not have a JDK installed."
+
+    exit 1
   fi
 
   jarch=$( $JAVA_HOME/bin/java -classpath . PropertyPrint os.arch )
