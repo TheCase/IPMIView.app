@@ -96,7 +96,7 @@ elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
     exit 1
   fi
 
-  jarch=$( $JAVA_HOME/bin/java -classpath . PropertyPrint os.arch )
+  jarch=$( $JAVA_HOME/bin/java -XshowSettings:properties -version 2>&1 | grep 'os.arch' | sed -e 's/.*=[ ]*//' )
 
   if [ "x86_64" != "$jarch" ] ; then
     echo "*"
