@@ -82,9 +82,9 @@ fi
 echo "Using Java from $JAVA_HOME"
 arch=$( arch )
 if [ "$arch" = "x86_64" ] ; then
-  echo "Okay, using x86-64 platform."
+  echo "Using ${arch} platform."
 elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
-  echo "Using aarm64 platform. Checking Java version..."
+  echo "Using ${arch} platform. Checking Java version..."
 
   if [ -x "$JAVA_HOME/bin/javac" ] ; then
     if [ ! -f PropertyPrint.class ] ; then
