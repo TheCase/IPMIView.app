@@ -86,7 +86,7 @@ if [ "$arch" = "x86_64" ] ; then
 elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
   echo "Using ${arch} platform. Checking Java version..."
 
-  jarch=$( $JAVA_HOME/bin/java -XshowSettings:properties -version 2>&1 | grep 'os.arch' | sed -e 's/.*=[ ]*//' )
+  jarch=$( "${JAVA_HOME}/bin/java" -XshowSettings:properties -version 2>&1 | grep 'os.arch' | sed -e 's/.*=[ ]*//' )
 
   if [ "x86_64" != "$jarch" ] ; then
     echo "*"
