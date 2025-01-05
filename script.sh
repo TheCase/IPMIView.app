@@ -9,6 +9,7 @@ INFO_URL="${BASE_URL}/downloadcenter/smsdownload\?category\=IPMI"
 API_URL="https://www.supermicro.com/support/resources/getfile.php?SoftwareItemID=DLID&type=serversoftwarefile"
 
 if which curl >/dev/null; then
+  echo "Detecting current SuperMicro software versions..."
   # this area is subject to problems if SuperMicro changes their page format
   DL_ID=$(curl -s ${INFO_URL} | grep "data-sms-name=\"Linux\".*sms_radio_buttons_IPMIView" | cut -d"'" -f4)
   DL_URL=$(echo $API_URL | sed "s/DLID/${DL_ID}/")
@@ -78,26 +79,74 @@ else
   echo "Press [Enter] to continue" && read answer
 fi
 
-echo "Extracting contents of downloaded IPMIView archive..."
-if [[ -d Contents/Resources/IPMIView ]]; then
-  rm -rf Contents/Resources/IPMIView
+echo "Using Java from $JAVA_HOME"
+arch=$( arch )
+if [ "$arch" = "x86_64" ] ; then
+  echo "Using ${arch} platform."
+elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
+  echo "Using ${arch} platform. Checking Java version..."
+
+  jarch=$( "${JAVA_HOME}/bin/java" -XshowSettings:properties -version 2>&1 | grep 'os.arch' | sed -e 's/.*=[ ]*//' )
+
+  if [ "x86_64" != "$jarch" ] ; then
+    echo "*"
+    echo "* This application bundle requires on x86-64 Java Runtime Environment (JRE/JDK)"
+    echo "* to run properly."
+    echo "*"
+    echo "* The Java platform is $jarch for JAVA_HOME=$JAVA_HOME"
+    echo "*"
+    echo "* Set your JAVA_HOME environment variable to an x86-64 JRE/JDK"
+    echo "* and run this script again."
+    echo "*"
+    echo "* In order to run an x86-64 JRE/JDK on your ${arch} computer, you will"
+    echo "* need to install Apple's Rosetta 2 software."
+    echo "*"
+
+    if arch -x86_64 /usr/bin/true 2> /dev/null; then
+      echo "* Rosetta 2 appears to be installed, so you will already be able to run"
+      echo "* the x86-64 JRE/JDK once you install it (if necessary) and set JAVA_HOME"
+      echo "* to point to it."
+    else
+      echo "* Rosetta 2 can't be detected on this system, so it is probably not installed."
+      echo "* You can install it using this command:"
+      echo
+      echo "*         softwareupdate --install-rosetta"
+      echo "*"
+    fi
+
+    echo
+    echo "IPMIView.app was not built. Please read the messages above."
+
+    exit 1
+  else
+    echo "Java platform is $jarch for JAVA_HOME=$JAVA_HOME"
+  fi
+else
+  echo "Unsupported platform: $arch"
+  exit 1
 fi
-mkdir -p Contents/Resources/IPMIView/Contents/Home/bin
-tar -zxf "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* --strip=1 -C ./Contents/Resources/IPMIView/. ||
+
+echo "Building IPMIView.app..."
+if [ -f IPMIView.app/Contents/Resources/IPMIView/IPMIView.properties ] ; then
+  echo "Saving configuration properties IPMIView.app/Contents/Resources/IPMIView/IPMIView.properties"
+  cp -a IPMIView.app/Contents/Resources/IPMIView/IPMIView.properties ./IPMIView.properties.tmp ||
+    { echo "Failed to save IPMIView.properties. Exiting."; exit 1; }
+fi
+rm -rf IPMIView.app
+mkdir IPMIView.app
+cp -a README.md Contents IPMIView.app/
+mkdir -p IPMIView.app/Contents/Resources/IPMIView/Contents/Home/bin
+tar -zxf "${LOCAL_DOWNLOAD_LOCATION}"/IPMIView*.tar* --strip=1 --exclude='*/jre/*' -C IPMIView.app/Contents/Resources/IPMIView/. ||
   { echo "Something went wrong, check download of IPMIView archive" && exit 1; }
+ln -s "${JAVA_HOME}/bin/java" IPMIView.app/Contents/Resources/IPMIView/Contents/Home/bin/java
+if [ -f IPMIView.properties.tmp ] ; then
+  echo "Restoring IPMIView.app/Contents/Resources/IPMIView/IPMIView.properties"
+  cp -a IPMIView.properties.tmp IPMIView.app/Contents/Resources/IPMIView/IPMIView.properties ||
+    { echo "Failed to restore IPMIView.properties. Exiting."; exit 1; }
 
-echo "Linking 'java' and 'jre'..."
-ln -s "${JAVA_HOME}/bin/java" Contents/Resources/IPMIView/Contents/Home/bin/java
-rm -rf Contents/Resources/IPMIView/jre/*
-pushd Contents/Resources/IPMIView/jre/ >/dev/null &&
-  ln -s ../Contents . &&
-  popd >/dev/null || exit
-
-echo "Copying IPMIView.app over to ~/Applications directory..."
-pushd .. >/dev/null &&
-  rsync -ar --exclude=.git --exclude=Contents/Resources/IPMIView/jre IPMIView.app ~/Applications &&
-  popd >/dev/null || exit
+  rm IPMIView.properties.tmp
+fi
 
 echo "Completed."
 echo
-echo "You can now open ~/Applications/IPMIView.app"
+echo "You can now open ./IPMIView.app or copy it into ~/Applications"
