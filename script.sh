@@ -91,14 +91,27 @@ elif [ "$arch" = "arm64" -o "$arch" = "aarch64" ] ; then
   if [ "x86_64" != "$jarch" ] ; then
     echo "*"
     echo "* This application bundle requires on x86-64 Java Runtime Environment (JRE/JDK)"
+    echo "* to run properly."
     echo "*"
-    echo "* Java platform is $jarch for JAVA_HOME=$JAVA_HOME. Set JAVA_HOME to an x86-64 JRE and run this script again."
+    echo "* The Java platform is $jarch for JAVA_HOME=$JAVA_HOME"
+    echo "*"
+    echo "* Set your JAVA_HOME environment variable to an x86-64 JRE/JDK"
+    echo "* and run this script again."
+    echo "*"
+    echo "* In order to run an x86-64 JRE/JDK on your ${arch} computer, you will"
+    echo "* need to install Apple's Rosetta 2 software."
     echo "*"
 
     if arch -x86_64 /usr/bin/true 2> /dev/null; then
-      echo "Rosetta 2 appears to be installed, so you will already be able to run the x86-64 JRE/JDK."
+      echo "* Rosetta 2 appears to be installed, so you will already be able to run"
+      echo "* the x86-64 JRE/JDK once you install it (if necessary) and set JAVA_HOME"
+      echo "* to point to it."
     else
-      echo "You may also need to install Rosetta 2 to run an x86-64 Java Runtime Environment."
+      echo "* Rosetta 2 can't be detected on this system, so it is probably not installed."
+      echo "* You can install it using this command:"
+      echo
+      echo "*         softwareupdate --install-rosetta"
+      echo "*"
     fi
 
     echo
